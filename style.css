@@ -1,0 +1,415 @@
+
+/* ---- HERO SECTION ---- */
+.hero-section {
+    background-image: url('https://i.postimg.cc/yNbDF97Y/hero.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 1rem;
+    padding: 1.5rem 2rem;
+    color: rgba(9, 8, 8, 0.992);
+    position: relative;
+    overflow: hidden;
+    height: 400px;
+    margin-top: 50px; /* Adjust this value to match your navbar height */
+    box-shadow: 0 10px 20px rgb(0, 0, 0);
+    display: flex;
+    align-items: center; /* Vertically centers the hero-content within hero-section */
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(249, 245, 245, 0.389);
+    border-radius: 1rem;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Default: Stack vertically on small screens */
+    align-items: flex-start; /* Default: Align all items to left on small screens */
+    justify-content: center; /* Default: Center content vertically on small screens */
+    padding-left: 2rem; /* Add padding to prevent logo from touching edge */
+    padding-right: 2rem; /* Add padding for text/button */
+}
+
+/* Specific positioning for logo and text/button */
+.hero-logo {
+    height: 400px;
+    width: 400px;
+    margin-top: -30px; 
+    margin-left: -40px; 
+    margin-bottom: 1rem; /* Space below logo on small screens */
+}
+
+/* Grouping for title and button - essential for desktop layout */
+.hero-text-and-button-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Pushes button to top of group */
+    align-items: flex-start;
+    height: 100%;
+    width: 100%;
+    max-width: 500px;
+    max-height: 500px;
+}
+
+
+.hero-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: rgb(12, 11, 11);
+    text-align: left; /* Text is left-aligned within its box */
+    width: 100%; /* Allows text to stretch and left-align within its group */
+    margin-left: 100px; /* Push title 100px to the right */
+    margin-top: 100px;
+}
+
+.btn-solid.btn-large {
+    margin-top: 100px; /* Push button 100px down from the top */
+    margin-left: 220px; /* Push button 100px to the right */
+}
+
+.icon-arrow {
+    height: 1.25rem;
+    width: 1.25rem;
+}
+
+/* ---- RESPONSIVE DESIGN (Media Queries) ---- */
+
+/* For larger screens (e.g., desktops, tablets in landscape) */
+@media (min-width: 768px) {
+    .hero-content {
+        flex-direction: row; /* Arrange logo and text/button group in a row */
+        justify-content: space-between; /* Pushes logo left, text/button group right */
+        align-items: stretch; /* Allows hero-text-and-button-group to take full height */
+    }
+
+    .hero-logo {
+        margin-top: -30px; /* Preserve logo top margin */
+        margin-left: -40px; /* Preserve logo left margin */
+        margin-bottom: 0; /* No bottom margin when in a row */
+        /* `justify-content: space-between` in hero-content handles its horizontal position */
+    }
+
+    .hero-text-and-button-group {
+        margin-left: auto; /* Pushes the entire group to the right */
+        max-width: 700px; /* Limit its width as desired */
+        height: 100%; /* Ensure it fills height to use justify-content: space-between */
+        justify-content: space-between; /* Pushes title to top, button to bottom */
+        align-items: flex-start; /* Align title and button left within this group */
+    }
+
+    .hero-title {
+        text-align: left; /* Ensure text is left-aligned */
+        margin-bottom: auto; /* Pushes button to bottom within the group */
+    }
+
+    .btn-solid.btn-large {
+        margin-top: 0; /* Reset margin-top for desktop as justify-content handles it */
+        /* Aligned left by align-items: flex-start on the parent group */
+    }
+}
+
+
+/* Adjustments for smaller screens (max-width: 767px) */
+@media (max-width: 767px) {
+    .hero-section {
+        height: auto; /* Allow height to adjust on smaller screens */
+        padding: 1rem;
+    }
+
+    .hero-content {
+        flex-direction: column; /* Stack elements vertically on small screens */
+        align-items: center; /* Center everything */
+        justify-content: center;
+        gap: 1rem; /* Space between elements */
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .hero-logo {
+        margin-top: 0;
+        margin-left: 0;
+        height: 150px; /* Adjust for better mobile fit */
+        width: 150px;
+    }
+
+    .hero-text-and-button-group {
+        width: 100%;
+        max-width: 90%;
+        align-items: center; /* Center title and button on small screens */
+        gap: 0.5rem;
+        height: auto; /* Allow height to adjust */
+    }
+
+    .hero-title {
+        font-size: 1.5rem;
+        max-width: 90%;
+        text-align: center; /* Center text on small screens */
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-solid.btn-large {
+        margin-top: 0.5rem;
+    }
+    /* ...existing code... */
+}
+/* ---- STATS SECTION ---- */
+.stats-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.stat-card {
+    background-color: #c7efcbf3;
+    padding: 1rem 0.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 24px 0 rgba(0,0,0,0.18), 0 1.5px 6px 0 rgba(0,0,0,0.12);
+    transition: transform 0.3s;
+    /* ...existing code... */
+}
+
+.stat-card:hover {
+    transform: scale(1.05);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-dark-green-text);
+}
+
+.stat-label {
+    color: var(--color-gray-600);
+    margin-top: 0.5rem;
+}
+
+
+/* ---- PROCESS SECTION ---- */
+.process-section {
+    margin-top: 5rem;
+}
+
+.process-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+}
+
+.process-text-card {
+    background-color: #c7efcbc6;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.405), 0 1.5px 6px 0 rgba(0, 0, 0, 0.118);
+    margin-left: 23px;
+    align-self: flex-start;
+    max-width: 28.5rem;
+    line-height: 1.6;
+    margin-top: 50px;
+}
+
+.process-image {
+    width: 25rem; /* Equivalent to w-100, which is non-standard in Tailwind */
+    height: 25rem; /* Equivalent to h-100, adjust as needed */
+    margin-top: -50px;
+}
+
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 15s linear infinite;
+}
+
+/* ---- PRODUCTS SECTION ---- */
+.products-section {
+    margin-top: 2rem;
+}
+
+.section-header {
+    text-align: center;
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-header p {
+    line-height: 1.6;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.product-card {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-0.5rem);
+}
+
+.product-image {
+    width: 100%;
+    height: 18rem;
+    object-fit: cover;
+    padding: 0;
+    border-radius: 1rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.product-info {
+    padding: 1.5rem;
+}
+
+.product-name {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-description {
+    color: var(--color-gray-600);
+    font-size: 0.875rem;
+}
+
+
+/* ---- FOOTER ---- */
+.footer {
+    background-color: var(--color-main-green);
+    margin-top: 5rem;
+}
+
+.footer-content {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    text-align: center;
+    color: var(--color-gray-800);
+}
+
+/* ---- RESPONSIVE DESIGN (Media Queries) ---- */
+/* Small screens and up (sm) */
+@media (min-width: 640px) {
+    .stats-section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Medium screens and up (md) */
+@media (min-width: 768px) {
+    .main-nav {
+        display: flex;
+        align-items: center;
+    }
+    .mobile-menu-trigger {
+        display: none;
+    }
+    .hero-section {
+        padding: 4rem;
+        text-align: left;
+    }
+    .hero-content {
+        align-items: flex-start;
+    }
+    .hero-title {
+        font-size: 3rem;
+    }
+    .stats-section {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .process-content {
+        flex-direction: row;
+    }
+}
+
+/* Large screens and up (lg) */
+@media (min-width: 1024px) {
+    .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+/* ---- COMMITMENT section---- */
+
+.commitment-section {
+    margin-top: 8rem;
+    margin-bottom: 3rem;
+}
+
+.commitment-text {
+    text-align: center;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    font-size: 1.15rem;
+}
+
+/* ---- Gallery Section Styles ---- */
+.gallery-section {
+    margin-bottom: 3rem;
+    padding: 30px; /* This creates the light green border/padding around the image card */
+    background-color: #f0f8f0; /* Very light green background for the card's outer area */
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.gallery-card {
+    position: relative; /* Crucial for positioning the text overlay */
+    border-radius: 15px;
+    overflow: hidden; /* Ensures the image and overlay have rounded corners */
+    
+    
+}
+
+.gallery-card img {
+    width: 100%;
+    height: 500px;
+    display: block; /* Removes any extra space below the image */
+    border-radius: 1px;
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black overlay */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.gallery-overlay h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    padding: 1rem 2rem;
+    border: 4px solid white; /* The white border around the text from the image */
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
