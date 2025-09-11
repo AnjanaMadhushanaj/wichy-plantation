@@ -20,10 +20,11 @@
                 <h1 style="color: var(--color-dark-green-text);">Wichy</h1>
             </div>
             <nav class="main-nav">
-                <a href="index.php">Home</a>
-                <a href="aboutus.php">About us</a>
-                <a href="news.php">News</a>
-                <a href="#">Contact us</a>
+                <?php $current = basename($_SERVER['PHP_SELF']); ?>
+                <a href="index.php"<?php if($current=='index.php') echo ' class="active"'; ?>>Home</a>
+                <a href="aboutus.php"<?php if($current=='aboutus.php') echo ' class="active"'; ?>>About us</a>
+                <a href="news.php"<?php if($current=='news.php') echo ' class="active"'; ?>>News</a>
+                <a href="contactus.php"<?php if($current=='contactus.php') echo ' class="active"'; ?>>Help us</a>
             </nav>
             <div class="header-actions">
                 <a href="#" class="btn btn-outline">Sign In</a>

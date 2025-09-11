@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="global.css">
 <footer style="background: #333; color: white; padding: 2rem 0; margin-top: 2rem;">
     <div
-        style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start;">
+    style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start;">
         <div style="flex: 1; min-width: 250px;">
             <img src="https://i.postimg.cc/Rh4vpGD4/LOGO.png" alt="Wichy Coconut Logo" style="height: 100px; margin-bottom: 1rem;">
             <p style="margin-bottom: 1rem;">
@@ -20,16 +20,20 @@
                 <i class="fa-solid fa-location-dot" style="margin-right: 0.75rem; width: 1em; text-align: center; margin-top: 4px; color: white;"></i> 107, UDA Industrial Estate, Katuwana, Homagama, Sri Lanka.
             </div>
         </div>
-        <form
-            style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 1rem;">
-            <input type="text" placeholder="NAME"
-                style="padding: 0.75rem; border-radius: 0.5rem; border: none;">
-            <input type="email" placeholder="E - Mail"
-                style="padding: 0.75rem; border-radius: 0.5rem; border: none;">
-            <textarea placeholder="Comment"
-                style="padding: 0.75rem; border-radius: 0.5rem; border: none; min-height: 80px;"></textarea>
-            <button type="submit"
-                style="background: #43a047; color: white; padding: 0.75rem; border-radius: 9999px; border: none; font-weight: bold;">SUBMIT</button>
-        </form>
+        <form action="save_message.php" method="POST"
+      style="flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 1rem;">
+
+    <input type="text" name="user_name" placeholder="NAME" required
+           style="padding: 0.75rem; border-radius: 0.5rem; border: none;">
+
+    <input type="email" name="user_email" placeholder="E - Mail" required
+           style="padding: 0.75rem; border-radius: 0.5rem; border: none;">
+
+    <textarea name="user_comment" placeholder="Comment" required
+              style="padding: 0.75rem; border-radius: 0.5rem; border: none; min-height: 80px;"></textarea>
+
+    <button type="submit"
+            style="background: #43a047; color: white; padding: 0.75rem; border-radius: 9999px; border: none; font-weight: bold;">SUBMIT</button>
+</form>
     </div>
 </footer>

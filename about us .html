@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <style>
+        /* ---- GLOBAL STYLES & VARIABLES ---- */
+        :root {
+            --color-bg: #c7efcb;
+            --color-bg-light-card: #F1F8E9;
+            --color-main-green: #A5D6A7;
+            --color-dark-green-text: #2E7D32;
+            --color-medium-green-text: #4CAF50;
+            --color-dark-btn: #333;
+            --color-gray-800: #1f2937;
+            --color-gray-700: #374151;
+            --color-gray-600: #4b5563;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-gray-800);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 10px 20px;
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            cursor: pointer;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--color-dark-green-text);
+            margin-left: 1rem;
+        }
+
+        .about-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+            margin: 120px 0 40px 0; /* top margin to avoid fixed header */
+        }
+
+        .about-section img {
+            flex: 1 1 400px;
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .about-text {
+            flex: 1 1 500px;
+        }
+
+        .about-text h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--color-medium-green-text);
+        }
+
+        .about-text p {
+            margin-bottom: 15px;
+            color: var(--color-gray-700);
+        }
+
+        .team {
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .team h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--color-medium-green-text);
+        }
+
+        .team-members {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .member {
+            background: var(--color-bg-light-card);
+            border-radius: 12px;
+            padding: 20px;
+            width: 250px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .member:hover {
+            transform: translateY(-5px);
+        }
+
+        .member img {
+            width: 100%;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background: var(--color-dark-green-text);
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">
+            <img src="C:\Users\user\Desktop\Wichy wesite\logo.jpg" alt="Company Logo">
+        </a>
+        <h1>About Us</h1>
+    </header>
+
+    <div class="container">
+        <section class="about-section">
+            <img src="C:\Users\user\Desktop\Wichy cocunut.jpg" alt="Our Company" width="10" height="450">
+            <div class="about-text">
+                <h2>Our Story</h2>
+                <p>At Wichy coconut, we’re passionate about bringing the natural goodness of coconuts to your kitchen. From fresh coconut milk to pure coconut oil and creamed coconut, we craft each product with care and allow you to customize your order just the way you like it, whether it’s adjusting thickness, adding herbs, or choosing your favorite flavors. Our goal is to make wholesome, versatile coconut products accessible, delicious, and tailored to your taste.</p>
+                <p>To celebrate the versatility of coconuts by providing high-quality, customizable products that nourish the body, delight the senses, and inspire healthy, creative cooking.</p>
+            </div>
+        </section>
+
+        <section class="team">
+            <h2>Meet Our Team</h2>
+            <div class="team-members">
+                <div class="member">
+                    <img src="https://images.generated.photos/Zh-uHZ91HfJEhpX56FsEV4P0aikACEPrWqHo-mqSC3U/g:no/rs:fill:256:384/czM6Ly9ncGhvdG9z/LXByb2QtaHVtYW4t/Z2FsbGVyeS80NDI4/LzQ1ZjZjNjg3LWMx/OTMtNDMxNS1hZmQx/LTYzNWZkMTFlMmY5/My0xLmpwZw.jpg" alt="Team Member">
+                    <h3>wichy Dias</h3>
+                    <p>CEO & Founder</p>
+                </div>
+                <div class="member">
+                    <img src="https://images.generated.photos/tDMa0Zdi7hPsAew56cgMWBeqDFDqJoRYJUOwzhEbkto/g:no/rs:fill:256:384/czM6Ly9ncGhvdG9z/LXByb2QtaHVtYW4t/Z2FsbGVyeS8xNTk2/LzcxODY1MTMyLTQ3/YzgtNDdkOS04OTM3/LTJhZWNlOGYzZDJj/Ny0xLmpwZw.jpg" alt="Team Member">
+                    <h3>Ananda samarasinghe</h3>
+                    <p>Lead Developer</p>
+                </div>
+                <div class="member">
+                    <img src="https://images.generated.photos/QG30EW7tVDnV23HRO7CYp8_3LFtxL5KjL19eukJlGt8/g:no/rs:fill:256:384/czM6Ly9ncGhvdG9z/LXByb2QtaHVtYW4t/Z2FsbGVyeS8yNDgw/LzY4YWJiNmNhLTFj/ZDgtNGQwZC1hYTk0/LWY4MDY3MWVlZTA0/Ny0xLmpwZw.jpg" alt="Team Member">
+                    <h3>Sarath fernando</h3>
+                    <p>Project Manager</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Your Company. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
