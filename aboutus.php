@@ -1,16 +1,14 @@
-
+<link rel="stylesheet" href="aboutus.css">
 <body>
+    
     <?php include 'components/navbar.php'; ?>
-    <header>
-        <a href="index.html" class="logo">
-            <img src="C:\Users\user\Desktop\Wichy wesite\logo.jpg" alt="Company Logo">
-        </a>
+    
         <h1>About Us</h1>
-    </header>
+    
 
     <div class="container">
         <section class="about-section">
-            <img src="C:\Users\user\Desktop\Wichy cocunut.jpg" alt="Our Company" width="10" height="450">
+            <img src="Wichy cocunut.jpg" alt="Our Company" width="10" height="450">
             <div class="about-text">
                 <h2>Our Story</h2>
                 <p>At Wichy coconut, we’re passionate about bringing the natural goodness of coconuts to your kitchen. From fresh coconut milk to pure coconut oil and creamed coconut, we craft each product with care and allow you to customize your order just the way you like it, whether it’s adjusting thickness, adding herbs, or choosing your favorite flavors. Our goal is to make wholesome, versatile coconut products accessible, delicious, and tailored to your taste.</p>
@@ -40,8 +38,6 @@
         </section>
     </div>
 
-    <footer>
-        <p>&copy; 2025 Your Company. All Rights Reserved.</p>
-    </footer>
+    <?php include 'components/footer.php'; ?>
 </body>
 </html>
