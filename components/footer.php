@@ -4,7 +4,7 @@
     <div
         style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start;">
         <div style="flex: 1; min-width: 250px;">
-            <img src="images/LOGO.png" alt="Wichy Coconut Logo" style="height: 60px; margin-bottom: 1rem;">
+            <img src="https://i.postimg.cc/Rh4vpGD4/LOGO.png" alt="Wichy Coconut Logo" style="height: 100px; margin-bottom: 1rem;">
             <p style="margin-bottom: 1rem;">
                 The Wichy Plantation Company (Pvt) Ltd connects consumers around the world with coconut farmers in
                 Sri Lanka, promoting global health and wellbeing while enriching local communities through
