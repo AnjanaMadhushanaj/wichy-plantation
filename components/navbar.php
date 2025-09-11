@@ -22,7 +22,7 @@
             <nav class="main-nav">
                 <a href="index.php">Home</a>
                 <a href="aboutus.php">About us</a>
-                <a href="#">News</a>
+                <a href="news.php">News</a>
                 <a href="#">Contact us</a>
             </nav>
             <div class="header-actions">

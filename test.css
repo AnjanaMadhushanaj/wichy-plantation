@@ -1,0 +1,22 @@
+/* ---- BACKGROUND BARS ---- */
+.background-bars-container {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3300px;
+    z-index: -1;
+    overflow: hidden; /* Prevents horizontal scrollbar */
+}
+
+.bar {
+    width: 70px;
+    height: 3300px;
+    background-color: #d8b63069;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(216,182,48,0.15);
+    border: 2px solid #e6d97a33;
+}
