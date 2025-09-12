@@ -118,8 +118,8 @@
                 </div>
             </div>
         </section>
-          <!-- Section for the large image gallery link -->
-       <section class="commitment-section">
+        <!-- Section for the large image gallery link -->
+        <section class="commitment-section">
             <h1 class="section-title">Our Commitment</h1>
             <p class="commitment-text">
                 The WICHY commitment is to our customers, planet, and community as a whole.<br>
@@ -127,19 +127,102 @@
                 reducing our carbon footprint and protecting our planet. We support local farming communities; our success
                 relies on their progress.
             </p>
-        <div class="gallery-section">
-            <div class="gallery-card">
-                <!-- IMPORTANT: Make sure the image path 'images/image1.png' is correct -->
-                <img src="https://i.postimg.cc/cLmwF5k4/image1.png" alt="Wichy Coconut Co. Building">
-                <div class="gallery-overlay">
-                    <h1>Visit Our Company With Image Gallery</h1>
+            <div class="gallery-section">
+                <div class="gallery-card">
+                    <!-- IMPORTANT: Make sure the image path 'images/image1.png' is correct -->
+                    <img src="https://i.postimg.cc/cLmwF5k4/image1.png" alt="Wichy Coconut Co. Building">
+                    <div class="gallery-overlay">
+                        <h1>Visit Our Company With Image Gallery</h1>
+                    </div>
                 </div>
-            </div>
         </section>
         <!--  section -->
     </main>
 
     <?php include 'components/footer.php'; ?>
+
+    <!-- AI Agent Floating Icon & Chat Widget -->
+    <div id="ai-chat-icon" style="position: fixed; bottom: 32px; right: 32px; z-index: 9999; width: 70px; height: 70px; background: rgba(255,255,255,0.25); border-radius: 50%; box-shadow: 0 8px 32px rgba(44,62,80,0.18); backdrop-filter: blur(8px); border: 1.5px solid rgba(255,255,255,0.35); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+        <img src="https://i.postimg.cc/Rh4vpGD4/LOGO.png" alt="AI Agent" style="width: 38px; height: 38px; filter: drop-shadow(0 2px 8px rgba(44,62,80,0.12));">
+    </div>
+    <div id="ai-chat-widget" style="position: fixed; bottom: 32px; right: 32px; z-index: 9999; width: 350px; max-width: 90vw; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.15); border: 1px solid #e0e0e0; display: none; flex-direction: column; overflow: hidden;">
+        <div style="background: #43a047; color: #fff; padding: 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; font-weight: bold; position: relative;">
+            Wichy AI Agent
+            <span id="ai-chat-close" style="position: absolute; right: 16px; top: 12px; cursor: pointer; font-size: 20px;">&times;</span>
+        </div>
+        <div id="ai-chat-bg" style="position: absolute; inset: 0; opacity: 0.04; background: url('https://i.postimg.cc/Rh4vpGD4/LOGO.png') center/140px no-repeat;"></div>
+        <div id="ai-chat-messages" style="flex: 1; padding: 16px; overflow-y: auto; min-height: 120px; max-height: 300px; position: relative;"></div>
+        <form id="ai-chat-form" style="display: flex; border-top: 1px solid #e0e0e0; position: relative; background: rgba(255,255,255,0.95);">
+            <input type="text" id="ai-chat-input" placeholder="Ask about Wichy Plantation..." style="flex: 1; border: none; padding: 12px; border-bottom-left-radius: 16px; outline: none;">
+            <button type="submit" style="background: #43a047; color: #fff; border: none; padding: 0 18px; border-bottom-right-radius: 16px; font-weight: bold; cursor: pointer;">Send</button>
+        </form>
+    </div>
+    <script>
+        // Show chat panel on icon click, hide on close
+        const chatIcon = document.getElementById('ai-chat-icon');
+        const chatWidget = document.getElementById('ai-chat-widget');
+        // Use event delegation for close button to ensure it works after DOM updates
+        chatIcon.onclick = () => {
+            chatWidget.style.display = 'flex';
+            chatIcon.style.display = 'none';
+        };
+        // Attach close button event after DOM is loaded
+        window.addEventListener('DOMContentLoaded', function() {
+            const chatCloseBtn = document.getElementById('ai-chat-close');
+            if (chatCloseBtn) {
+                chatCloseBtn.onclick = function() {
+                    chatWidget.style.display = 'none';
+                    chatIcon.style.display = 'flex';
+                };
+            }
+            // Close chat panel when clicking outside of it
+            document.addEventListener('mousedown', function(e) {
+                if (chatWidget.style.display === 'flex' && !chatWidget.contains(e.target) && !chatIcon.contains(e.target)) {
+                    chatWidget.style.display = 'none';
+                    chatIcon.style.display = 'flex';
+                }
+            });
+        });
+        // Simple frontend chat logic
+        const chatForm = document.getElementById('ai-chat-form');
+        const chatInput = document.getElementById('ai-chat-input');
+        const chatMessages = document.getElementById('ai-chat-messages');
+
+        function addMessage(text, sender) {
+            const msg = document.createElement('div');
+            msg.style.marginBottom = '8px';
+            msg.style.textAlign = sender === 'user' ? 'right' : 'left';
+            msg.innerHTML = `<span style='background:${sender==='user'?'#e0f7fa':'#f1f8e9'};padding:8px 12px;border-radius:12px;display:inline-block;'>${text}</span>`;
+            chatMessages.appendChild(msg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        chatForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const question = chatInput.value.trim();
+            if (!question) return;
+            addMessage(question, 'user');
+            chatInput.value = '';
+            addMessage('Thinking...', 'ai');
+            // Call backend Gemini API endpoint
+            try {
+                const res = await fetch('backend/gemini_agent.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        question
+                    })
+                });
+                const data = await res.json();
+                chatMessages.lastChild.remove(); // remove 'Thinking...'
+                addMessage(data.answer, 'ai');
+            } catch (err) {
+                chatMessages.lastChild.remove();
+                addMessage('Sorry, there was an error connecting to the AI agent.', 'ai');
+            }
+        });
+    </script>
     <script>
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
