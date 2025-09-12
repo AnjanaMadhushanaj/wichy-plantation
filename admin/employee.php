@@ -1,6 +1,12 @@
 <?php
 require_once __DIR__ . '/../config.php';
 
+// Check if user is logged in and is admin
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header('Location: ../login.php');
+    exit;
+}
+
 $success = $error = '';
 
 // Handle Delete (via GET)
@@ -101,25 +107,345 @@ $employee = $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
 <head>
 <meta charset="utf-8">
 <title>Manage Employees</title>
-<link rel="stylesheet" href="../public/style.css">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"></noscript>
 <style>
-.container { max-width:1000px; margin:auto; padding:20px; }
-table { width:100%; border-collapse:collapse; margin-top:16px; }
-th, td { border:1px solid #ccc; padding:8px; text-align:left; }
-th { background:#f5f5f5; }
-input[type=text] { width:100%; padding:8px; margin-bottom:8px; box-sizing:border-box; }
-.btn { padding:6px 10px; text-decoration:none; border-radius:4px; border:1px solid #aaa; display:inline-block; }
-.btn-primary { background:#2d7; border-color:#28a745; color:#000; }
-.btn-danger { background:#f88; border-color:#e63946; color:#000; }
-.notice { padding:10px; margin-bottom:12px; border-radius:4px; }
-.notice.success { background:#e6ffed; border:1px solid #b7f0c6; }
-.notice.error { background:#ffe6e6; border:1px solid #f0b7b7; }
+/* ---- EXPERT DESIGN SYSTEM ---- */
+:root {
+    --green: #4CAF50;
+    --dark-green: #2E7D32;
+    --light-green: #E8F5E9;
+    --gray: #666;
+    --light-gray: #f5f5f5;
+    --bg: #f8fffe;
+    --accent: #00c853;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --danger: #e74c3c;
+    --success: #27ae60;
+}
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    background: linear-gradient(135deg, var(--bg) 0%, #e8f5e9 100%);
+    margin: 0;
+    padding: 20px;
+    color: #2c3e50;
+    line-height: 1.6;
+}
+
+/* ---- MODERN CONTAINER ---- */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 
+        0 20px 40px var(--shadow),
+        0 0 0 1px rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.container h1 {
+    color: var(--dark-green);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 30px 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.container h1::before {
+    content: '👥';
+    font-size: 2.2rem;
+}
+
+.container h3 {
+    color: var(--dark-green);
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 40px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 3px solid transparent;
+    background: linear-gradient(90deg, var(--green), var(--accent)) bottom/100% 3px no-repeat;
+}
+
+.btn {
+    padding: 0.375rem 1.25rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+    display: inline-block;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.btn-outline {
+    border: 1px solid var(--color-gray-700);
+    color: var(--color-gray-800);
+}
+
+.btn-outline:hover {
+    background-color: var(--color-gray-700);
+    color: white;
+}
+
+.btn-solid {
+    background-color: var(--color-gray-800);
+    color: white;
+}
+
+.btn-solid:hover {
+    background-color: var(--color-gray-700);
+}
+
+.btn-primary {
+    background-color: var(--color-dark-green-text);
+    color: white;
+    border-color: var(--color-dark-green-text);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-medium-green-text);
+}
+
+.btn-light {
+    background-color: var(--color-bg-light-card);
+    color: var(--color-dark-green-text);
+    border: 1px solid var(--color-main-green);
+}
+
+.btn-light:hover {
+    background-color: var(--color-main-green);
+    color: var(--color-dark-green-text);
+}
+
+/* ---- MODERN BUTTON SYSTEM ---- */
+.btn {
+    padding: 12px 24px;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    margin: 4px 8px 4px 0;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--green) 0%, var(--dark-green) 100%);
+    color: white;
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
+    color: white;
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+}
+
+.btn-danger:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(231, 76, 60, 0.4);
+}
+
+/* ---- PREMIUM FORM STYLING ---- */
+.form-section {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 25px var(--shadow);
+    margin-bottom: 30px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    color: var(--dark-green);
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #e1e5e9;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    background: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+    margin-bottom: 16px;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--green);
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.15);
+}
+
+/* ---- PREMIUM TABLE DESIGN ---- */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px var(--shadow);
+    margin-top: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+th {
+    background: linear-gradient(135deg, var(--dark-green) 0%, var(--green) 100%);
+    color: white;
+    padding: 20px 16px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    border: none;
+}
+
+th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+td {
+    padding: 18px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background: linear-gradient(135deg, var(--light-green) 0%, rgba(232, 245, 233, 0.7) 100%);
+    transform: scale(1.01);
+}
+
+/* ---- ALERT MESSAGES ---- */
+.notice {
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.notice.success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #065f46;
+    border: 1px solid #34d399;
+}
+
+.notice.success::before {
+    content: '✅';
+    font-size: 18px;
+}
+
+.notice.error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%);
+    color: #991b1b;
+    border: 1px solid #f87171;
+}
+
+.notice.error::before {
+    content: '❌';
+    font-size: 18px;
+}
+
+/* ---- RESPONSIVE DESIGN ---- */
+@media (max-width: 768px) {
+    .container {
+        padding: 24px;
+        margin: 10px;
+    }
+    
+    .container h1 {
+        font-size: 2rem;
+    }
+    
+    .form-section {
+        padding: 20px;
+    }
+    
+    table {
+        font-size: 12px;
+    }
+    
+    th, td {
+        padding: 12px 8px;
+    }
+    
+    .btn {
+        padding: 10px 16px;
+        font-size: 12px;
+    }
+}
 </style>
 
 <script>
-// Add new phone input
+// Add new phone input with modern styling
 function addPhoneField() {
     const div = document.createElement('div');
+    div.className = 'phone-field';
     div.innerHTML = '<input type="text" name="phones[]" placeholder="Phone Number (0771234567 or +94771234567)" required>';
     document.getElementById('phone-fields').appendChild(div);
 }
@@ -155,7 +481,13 @@ document.addEventListener('DOMContentLoaded', function(){
 </head>
 <body>
 <div class="container">
-    <h1>Manage Employees</h1>
+    <!-- Header with Back Button -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid transparent; background: linear-gradient(90deg, var(--green), var(--accent)) bottom/100% 3px no-repeat;">
+        <h1 style="margin: 0;">Employee Management</h1>
+        <a href="../admin.php" class="btn" style="background: rgba(255, 255, 255, 0.9); color: var(--dark-green); border-color: var(--green); backdrop-filter: blur(10px);">
+            ⬅️ Back to Dashboard
+        </a>
+    </div>
 
     <?php if ($success): ?>
         <div class="notice success"><?= htmlspecialchars($success) ?></div>
@@ -165,47 +497,82 @@ document.addEventListener('DOMContentLoaded', function(){
     <?php endif; ?>
 
     <!-- Add Employee Form -->
-    <h3>Add Employee</h3>
-    <form method="post" id="add-employee-form" novalidate>
-        <label>Name</label>
-        <input type="text" name="name" required>
+    <div class="form-section">
+        <h3>➕ Add New Employee</h3>
+        <form method="post" id="add-employee-form" novalidate>
+            <label for="name">👤 Employee Name</label>
+            <input type="text" id="name" name="name" required placeholder="Enter full name">
 
-        <label>Role</label>
-        <input type="text" name="role" required>
+            <label for="role">💼 Job Role</label>
+            <input type="text" id="role" name="role" required placeholder="e.g., Manager, Cashier, Sales Associate">
 
-        <label>Address</label>
-        <input type="text" name="address" required>
+            <label for="address">🏠 Address</label>
+            <input type="text" id="address" name="address" required placeholder="Enter full address">
 
-        <label>Phone Numbers</label>
-        <div id="phone-fields">
-            <input type="text" name="phones[]" placeholder="Phone Number (0771234567 or +94771234567)" required>
-        </div>
-        <button type="button" onclick="addPhoneField()" class="btn">+ Add More Phones</button>
-        <br><br>
-        <button type="submit" name="add" class="btn btn-primary">Add Employee</button>
-    </form>
+            <label>📱 Phone Numbers</label>
+            <div id="phone-fields">
+                <div class="phone-field">
+                    <input type="text" name="phones[]" placeholder="Phone Number (0771234567 or +94771234567)" required>
+                </div>
+            </div>
+            <button type="button" onclick="addPhoneField()" class="btn" style="background: var(--light-green); color: var(--dark-green); margin-bottom: 20px;">
+                ➕ Add More Phones
+            </button>
+            <br>
+            <button type="submit" name="add" class="btn btn-primary">
+                ✨ Add Employee
+            </button>
+        </form>
+    </div>
 
     <!-- Employee Table -->
-    <h3 style="margin-top:24px;">Employee List</h3>
+    <h3>👥 Employee Directory</h3>
+    <?php if (!empty($employee)): ?>
     <table>
-        <tr>
-            <th>ID</th><th>Name</th><th>Role</th><th>Address</th><th>Phone Numbers</th><th>Actions</th>
-        </tr>
-        <?php foreach ($employee as $e): ?>
-        <tr>
-            <td><?= (int)$e['Emp_ID'] ?></td>
-            <td><?= htmlspecialchars($e['Name']) ?></td>
-            <td><?= htmlspecialchars($e['Role']) ?></td>
-            <td><?= htmlspecialchars($e['Address']) ?></td>
-            <td><?= htmlspecialchars($e['Phones'] ?? 'N/A') ?></td>
-            <td>
-                <a href="employee.php?delete=<?= (int)$e['Emp_ID'] ?>"
-                   class="btn btn-danger"
-                   onclick="return confirm('Delete this employee?')">Delete</a>
-            </td>
-        </tr>
-        <?php endforeach; ?>
+        <thead>
+            <tr>
+                <th>🆔 ID</th>
+                <th>👤 Name</th>
+                <th>💼 Role</th>
+                <th>🏠 Address</th>
+                <th>📱 Phone Numbers</th>
+                <th>⚡ Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($employee as $e): ?>
+            <tr>
+                <td><strong>#<?= (int)$e['Emp_ID'] ?></strong></td>
+                <td style="font-weight: 600; color: var(--dark-green);"><?= htmlspecialchars($e['Name']) ?></td>
+                <td>
+                    <span style="background: var(--light-green); color: var(--dark-green); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                        <?= htmlspecialchars($e['Role']) ?>
+                    </span>
+                </td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="<?= htmlspecialchars($e['Address']) ?>">
+                    <?= htmlspecialchars(strlen($e['Address']) > 40 ? substr($e['Address'], 0, 40) . '...' : $e['Address']) ?>
+                </td>
+                <td style="font-family: monospace; font-size: 13px; color: var(--gray);">
+                    <?= htmlspecialchars($e['Phones'] ?? 'N/A') ?>
+                </td>
+                <td>
+                    <a href="employee.php?delete=<?= (int)$e['Emp_ID'] ?>"
+                       class="btn btn-danger"
+                       onclick="return confirm('⚠️ Are you sure you want to delete this employee?\\n\\nEmployee: <?= htmlspecialchars($e['Name']) ?>\\nRole: <?= htmlspecialchars($e['Role']) ?>')">
+                        🗑️ Delete
+                    </a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
     </table>
+    <?php else: ?>
+    <div style="text-align: center; padding: 60px 20px; background: rgba(255,255,255,0.7); border-radius: 16px; margin-top: 30px;">
+        <div style="font-size: 4rem; margin-bottom: 20px;">👥</div>
+        <h3 style="color: var(--dark-green); margin: 0 0 10px 0;">No Employees Found</h3>
+        <p style="color: var(--gray); margin: 0;">Add your first employee using the form above.</p>
+    </div>
+    <?php endif; ?>
 </div>
 </body>
 </html>

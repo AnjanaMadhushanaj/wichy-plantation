@@ -24,7 +24,7 @@
                 <img src="https://i.postimg.cc/Rh4vpGD4/LOGO.png" alt="WICHY COCONUT Logo" class="hero-logo">
                 <div class="hero-text-and-button-group">
                     <h1 class="hero-title">Wichy—your source for handcrafted coconut products.</h1>
-                    <a href="#" class="btn btn-solid btn-large">
+                    <a href="login.php" class="btn btn-solid btn-large">
                         <span>SHOP NOW</span>
                         <svg class="icon-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                             fill="currentColor">
@@ -158,72 +158,8 @@
         </form>
     </div>
     <script>
-        // Show chat panel on icon click, hide on close
-        const chatIcon = document.getElementById('ai-chat-icon');
-        const chatWidget = document.getElementById('ai-chat-widget');
-        // Use event delegation for close button to ensure it works after DOM updates
-        chatIcon.onclick = () => {
-            chatWidget.style.display = 'flex';
-            chatIcon.style.display = 'none';
-        };
-        // Attach close button event after DOM is loaded
-        window.addEventListener('DOMContentLoaded', function() {
-            const chatCloseBtn = document.getElementById('ai-chat-close');
-            if (chatCloseBtn) {
-                chatCloseBtn.onclick = function() {
-                    chatWidget.style.display = 'none';
-                    chatIcon.style.display = 'flex';
-                };
-            }
-            // Close chat panel when clicking outside of it
-            document.addEventListener('mousedown', function(e) {
-                if (chatWidget.style.display === 'flex' && !chatWidget.contains(e.target) && !chatIcon.contains(e.target)) {
-                    chatWidget.style.display = 'none';
-                    chatIcon.style.display = 'flex';
-                }
-            });
-        });
-        // Simple frontend chat logic
-        const chatForm = document.getElementById('ai-chat-form');
-        const chatInput = document.getElementById('ai-chat-input');
-        const chatMessages = document.getElementById('ai-chat-messages');
-
-        function addMessage(text, sender) {
-            const msg = document.createElement('div');
-            msg.style.marginBottom = '8px';
-            msg.style.textAlign = sender === 'user' ? 'right' : 'left';
-            msg.innerHTML = `<span style='background:${sender==='user'?'#e0f7fa':'#f1f8e9'};padding:8px 12px;border-radius:12px;display:inline-block;'>${text}</span>`;
-            chatMessages.appendChild(msg);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        chatForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const question = chatInput.value.trim();
-            if (!question) return;
-            addMessage(question, 'user');
-            chatInput.value = '';
-            addMessage('Thinking...', 'ai');
-            // Call backend Gemini API endpoint
-            try {
-                const res = await fetch('backend/gemini_agent.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        question
-                    })
-                });
-                const data = await res.json();
-                chatMessages.lastChild.remove(); // remove 'Thinking...'
-                addMessage(data.answer, 'ai');
-            } catch (err) {
-                chatMessages.lastChild.remove();
-                addMessage('Sorry, there was an error connecting to the AI agent.', 'ai');
-            }
-        });
-    </script>
-    <script>
+        
+    
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');

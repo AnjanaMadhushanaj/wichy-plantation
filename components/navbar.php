@@ -27,8 +27,8 @@
                 <a href="contactus.php"<?php if($current=='contactus.php') echo ' class="active"'; ?>>Help us</a>
             </nav>
             <div class="header-actions">
-                <a href="#" class="btn btn-outline">Sign In</a>
-                <a href="#" class="btn btn-solid">Sign Up</a>
+                <a href="login.php" class="btn btn-outline">Sign In</a>
+                <a href="signup.php" class="btn btn-solid">Sign Up</a>
             </div>
             <div class="mobile-menu-trigger">
                 <button id="mobile-menu-button">
