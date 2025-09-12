@@ -1,6 +1,12 @@
 <?php
 require_once __DIR__ . '/../config.php';
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+// Ensure user is logged in (same guard as items.php)
+if (!isset($_SESSION['user_id']) || !$_SESSION['user_id']) {
+    header('Location: ../login.php');
+    exit;
+}
 $stmt = $conn->prepare("SELECT * FROM product WHERE product_id = ?");
 $stmt->bind_param('i', $id);
 $stmt->execute();
@@ -308,35 +314,140 @@ main {
     width: 100%;
     margin-top: auto;
 }
+
+/* ---- PRODUCT DETAIL LAYOUT ---- */
+.page-wrap {
+    padding-top: 96px; /* breathing room */
+    padding-bottom: 48px;
+}
+
+.back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--color-dark-green-text);
+    background: var(--color-bg-light-card);
+    border: 1px solid var(--color-main-green);
+    padding: 8px 14px;
+    border-radius: 9999px;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.back:hover { 
+    transform: translateY(-1px);
+    box-shadow: 0 8px 16px rgba(76, 175, 80, 0.15);
+    background: #E8F5E9;
+}
+
+.detail {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 32px;
+    align-items: start;
+    margin-top: 16px;
+}
+
+@media (max-width: 992px) {
+    .detail {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+
+.card-padding { padding: 18px; }
+.card-pad-lg { padding: 22px; }
+
+.big {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background: #fafafa;
+}
+
+.thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.thumb {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.thumb:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.08); }
+
+h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.75rem;
+    color: var(--color-gray-800);
+}
+
+.price {
+    color: var(--color-dark-green-text);
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+}
+
+.desc { color: var(--color-gray-700); line-height: 1.7; }
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.actions .btn { border-radius: 10px; padding: 10px 16px; }
+.actions .btn-primary { box-shadow: 0 8px 18px rgba(46, 125, 50, 0.25); }
+.actions .btn-primary:hover { box-shadow: 0 10px 22px rgba(46, 125, 50, 0.35); }
 </style>
 <script>
 function swap(src){ document.getElementById('big').src = src; }
 </script>
 </head>
 <body>
-<div class="container">
-<a class="back" href="items.php">← Back to items</a>
-<div class="detail" style="margin-top:12px">
-<div>
-<img id="big" class="big" src="<?=h($p['product_image'])?>" alt="">
-<div class="thumbs">
-<img class="thumb" src="<?=h($p['product_image'])?>" onclick="swap(this.src)">
-<!-- small demo: use same image for thumbnails -->
-<img class="thumb" src="<?=h($p['product_image'])?>" onclick="swap(this.src)">
-<img class="thumb" src="<?=h($p['product_image'])?>" onclick="swap(this.src)">
-</div>
-</div>
-<div>
-<h2><?=h($p['product_name'])?></h2>
-<div class="price">Rs <?=number_format($p['product_price'],2)?></div>
-<p><?= nl2br(h($p['description'])) ?></p>
-<div>
-<a class="btn btn-light" href="items.php">Back</a>
-<a class="btn btn-primary" href="cart.php?add=<?= $p['product_id'] ?>">Add to Cart</a>
-<a class="btn btn-primary" href="cart.php?buy=<?= $p['product_id'] ?>">Buy Now</a>
-</div>
-</div>
-</div>
-</div>
+<div class="container page-wrap">
+  <a class="back" href="items.php" aria-label="Back to items">&#8592; Back to items</a>
+
+  <div class="detail">
+    <!-- Left: Gallery -->
+    <div class="card card-padding">
+      <img id="big" class="big" src="<?=h($p['product_image'])?>" alt="<?=h($p['product_name'])?>" loading="eager">
+      <div class="thumbs">
+        <img class="thumb" src="<?=h($p['product_image'])?>" alt="Thumbnail 1" onclick="swap(this.src)" loading="lazy">
+        <!-- demo thumbnails reuse same image -->
+        <img class="thumb" src="<?=h($p['product_image'])?>" alt="Thumbnail 2" onclick="swap(this.src)" loading="lazy">
+        <img class="thumb" src="<?=h($p['product_image'])?>" alt="Thumbnail 3" onclick="swap(this.src)" loading="lazy">
+        <img class="thumb" src="<?=h($p['product_image'])?>" alt="Thumbnail 4" onclick="swap(this.src)" loading="lazy">
+      </div>
+    </div>
+
+    <!-- Right: Details -->
+    <div class="card card-pad-lg">
+      <h2><?=h($p['product_name'])?></h2>
+      <div class="price">Rs <?=number_format($p['product_price'],2)?></div>
+      <p class="desc"><?= nl2br(h($p['description'])) ?></p>
+      <div class="actions" style="margin-top:16px">
+        <a class="btn btn-light" href="items.php">Back</a>
+        <a class="btn btn-primary" href="cart.php?add=<?= $p['product_id'] ?>">Add to Cart</a>
+        <a class="btn btn-primary" href="cart.php?buy=<?= $p['product_id'] ?>">Buy Now</a>
+      </div>
+    </div>
+  </div>
+ </div>
 </body>
 </html>

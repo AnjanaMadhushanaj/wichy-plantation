@@ -1,3 +1,7 @@
+<?php
+// Always include config.php before any output to avoid session_start() header issues
+require_once 'config.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -193,7 +197,41 @@
 
         <!-- CONTACT FORM -->
         <div class="contact-form">
-            <form action="#" method="POST">
+            <?php
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                require_once 'config.php';
+                $name = trim($_POST['name'] ?? '');
+                $email = trim($_POST['email'] ?? '');
+                $subject = trim($_POST['subject'] ?? '');
+                $message = trim($_POST['message'] ?? '');
+                $errors = [];
+                if ($name === '' || strlen($name) < 2 || strlen($name) > 100) {
+                    $errors[] = 'Name must be 2-100 characters.';
+                }
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 150) {
+                    $errors[] = 'Enter a valid email address (max 150 chars).';
+                }
+                if ($subject === '' || strlen($subject) < 2 || strlen($subject) > 200) {
+                    $errors[] = 'Subject must be 2-200 characters.';
+                }
+                if ($message === '' || strlen($message) < 3 || strlen($message) > 1000) {
+                    $errors[] = 'Message must be 3-1000 characters.';
+                }
+                if (count($errors) === 0) {
+                    $stmt = $conn->prepare('INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)');
+                    $stmt->bind_param('ssss', $name, $email, $subject, $message);
+                    if ($stmt->execute()) {
+                        echo '<div style="color:green; margin-bottom:12px;">Thank you! Your message has been sent.</div>';
+                    } else {
+                        echo '<div style="color:red; margin-bottom:12px;">Error saving your message. Please try again later.</div>';
+                    }
+                    $stmt->close();
+                } else {
+                    echo '<div style="color:red; margin-bottom:12px;">'.implode('<br>', $errors).'</div>';
+                }
+            }
+            ?>
+            <form action="" method="POST">
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" placeholder="Your Name" required>
 

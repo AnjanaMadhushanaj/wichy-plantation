@@ -11,11 +11,15 @@ if ($conn->connect_error) {
 die('DB connection error: ' . $conn->connect_error);
 }
 
-
 session_start();
+
+// Start session only if not already started and before any output
+if (session_status() === PHP_SESSION_NONE) {
+	session_start();
+}
 // For this simple demo, auto-login test user ID 1. Replace with real login later.
 if (!isset($_SESSION['user_id'])) {
-$_SESSION['user_id'] = 1;
+	$_SESSION['user_id'] = 1;
 }
 
 

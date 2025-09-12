@@ -11,10 +11,7 @@ if (!isset($_SESSION['checkout_address']) || ($_SESSION['payment_method'] ?? '')
     exit;
 }
 
-// Helper function for HTML escaping
-function h($str) {
-    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
-}
+// Use global helper h() from config.php
 
 $errors = [];
 $card_holder = '';
@@ -484,7 +481,7 @@ input[name="cvv"] {
     <form method="post" autocomplete="off" id="cardForm">
         <div class="form-group">
             <label>Card Holder Name</label>
-            <input type="text" name="card_holder" value="<?= h($card_holder) ?>" placeholder="Full name as shown on card" required>
+            <input type="text" name="card_holder" id="holderName" value="<?= h($card_holder) ?>" placeholder="Full name as shown on card" required>
         </div>
         
         <div class="form-group">

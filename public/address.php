@@ -73,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Address</title>
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -635,19 +636,19 @@ select.input {
     <form method="post" id="addressForm" autocomplete="off">
         <div class="form-group">
             <label>Receiver's Name</label>
-            <input type="text" name="receiver" class="input" value="<?= htmlspecialchars($receiver ?? '') ?>" placeholder="Enter full name of the recipient" required>
+            <input type="text" name="receiver" class="input" value="<?= htmlspecialchars($receiver ?? '') ?>" placeholder="Enter full name of the recipient" required autocomplete="name">
             <?php if (!empty($errors['receiver'])): ?><div class="error-message"><?= htmlspecialchars($errors['receiver']) ?></div><?php endif; ?>
         </div>
 
         <div class="form-group">
             <label>Delivery Address</label>
-            <textarea name="address" class="input" rows="4" placeholder="Enter complete delivery address including street name, building number, and any landmarks" required><?= htmlspecialchars($address ?? '') ?></textarea>
+            <textarea name="address" class="input" rows="4" placeholder="Enter complete delivery address including street name, building number, and any landmarks" required autocomplete="address-line1"><?= htmlspecialchars($address ?? '') ?></textarea>
             <?php if (!empty($errors['address'])): ?><div class="error-message"><?= htmlspecialchars($errors['address']) ?></div><?php endif; ?>
         </div>
 
         <div class="form-group">
             <label>Province</label>
-            <select name="province" id="province" class="input" required>
+            <select name="province" id="province" class="input" required autocomplete="address-level1">
                 <option value="">Choose your province</option>
                 <?php foreach ($provinces as $prov => $dists): ?>
                     <option value="<?= htmlspecialchars($prov) ?>" <?= ($province === $prov) ? 'selected' : '' ?>><?= htmlspecialchars($prov) ?> Province</option>
@@ -658,7 +659,7 @@ select.input {
 
         <div class="form-group">
             <label>District</label>
-            <select name="district" id="district" class="input" required>
+            <select name="district" id="district" class="input" required autocomplete="address-level2">
                 <option value="">Choose your district</option>
                 <?php if ($province && isset($provinces[$province])): ?>
                     <?php foreach ($provinces[$province] as $dist): ?>
@@ -671,13 +672,13 @@ select.input {
 
         <div class="form-group">
             <label>Postal Code</label>
-            <input type="text" name="postal" class="input" maxlength="5" pattern="\d{5}" value="<?= htmlspecialchars($postal ?? '') ?>" placeholder="Enter 5-digit postal code" required>
+            <input type="text" name="postal" class="input" maxlength="5" pattern="\d{5}" value="<?= htmlspecialchars($postal ?? '') ?>" placeholder="Enter 5-digit postal code" required inputmode="numeric" autocomplete="postal-code">
             <?php if (!empty($errors['postal'])): ?><div class="error-message"><?= htmlspecialchars($errors['postal']) ?></div><?php endif; ?>
         </div>
 
         <div class="form-group">
             <label>Mobile Number</label>
-            <input type="tel" name="mobile" class="input" maxlength="11" pattern="(0|94)?7\d{8}" value="<?= htmlspecialchars($mobile ?? '') ?>" placeholder="07XXXXXXXX or 947XXXXXXXX" required>
+            <input type="tel" name="mobile" class="input" maxlength="11" pattern="(0|94)?7\d{8}" value="<?= htmlspecialchars($mobile ?? '') ?>" placeholder="07XXXXXXXX or 947XXXXXXXX" required inputmode="tel" autocomplete="tel">
             <?php if (!empty($errors['mobile'])): ?><div class="error-message"><?= htmlspecialchars($errors['mobile']) ?></div><?php endif; ?>
         </div>
 

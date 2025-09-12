@@ -343,27 +343,121 @@ body {
     <h1>Admin Dashboard</h1>
     <p>Manage your store easily from here</p>
 </div>
+
+<!-- Quick Actions Section -->
+<div class="container" style="margin-bottom: 30px;">
+    <div class="card" style="width:100%;max-width:1000px;margin:auto;">
+        <h2 style="margin-bottom:18px;">Quick Actions</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center;">
+            <a class="btn btn-primary" href="products.php">Manage Products</a>
+            <a class="btn btn-primary" href="orders.php">View Orders</a>
+            <a class="btn btn-primary" href="employee.php">Manage Employees</a>
+            <a class="btn btn-primary" href="comments.php">View All Comments</a>
+            <a class="btn btn-primary" href="contact_messages.php">View Contact Messages</a>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:40px;justify-content:center;margin-top:30px;">
+            <form method="POST" action="admin_add_comment.php" style="background:#fff;padding:18px 24px;border-radius:10px;box-shadow:0 2px 8px #0001;min-width:260px;">
+                <h3 style="margin-top:0;color:var(--color-dark-green-text);">Add Comment</h3>
+                <input type="text" name="user_name" placeholder="Name" required style="width:100%;margin-bottom:10px;padding:8px 10px;border-radius:6px;border:1px solid var(--color-main-green);">
+                <textarea name="comment" placeholder="Comment" required style="width:100%;margin-bottom:10px;padding:8px 10px;border-radius:6px;border:1px solid var(--color-main-green);"></textarea>
+                <button type="submit" class="btn btn-solid" style="width:100%;">Add Comment</button>
+            </form>
+            <form method="POST" action="admin_add_contact_message.php" style="background:#fff;padding:18px 24px;border-radius:10px;box-shadow:0 2px 8px #0001;min-width:260px;">
+                <h3 style="margin-top:0;color:var(--color-dark-green-text);">Add Contact Message</h3>
+                <input type="text" name="name" placeholder="Name" required style="width:100%;margin-bottom:10px;padding:8px 10px;border-radius:6px;border:1px solid var(--color-main-green);">
+                <input type="email" name="email" placeholder="Email" required style="width:100%;margin-bottom:10px;padding:8px 10px;border-radius:6px;border:1px solid var(--color-main-green);">
+                <input type="text" name="subject" placeholder="Subject" required style="width:100%;margin-bottom:10px;padding:8px 10px;border-radius:6px;border:1px solid var(--color-main-green);">
+                <textarea name="message" placeholder="Message" required style="width:100%;margin-bottom:10px;padding:8px 10px;border-radius:6px;border:1px solid var(--color-main-green);"></textarea>
+                <button type="submit" class="btn btn-solid" style="width:100%;">Add Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Comments Section under Quick Actions -->
+<?php
+require_once '../config.php';
+$sql = "SELECT id, user_name, comment, created_at FROM comments ORDER BY created_at DESC LIMIT 10";
+$result = $conn->query($sql);
+?>
+<div class="container" style="margin-top: 0;">
+    <div class="card" style="width:100%;max-width:1000px;margin:auto;">
+        <h2 style="margin-bottom:18px;">Latest Customer Comments</h2>
+        <?php if ($result && $result->num_rows > 0): ?>
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="background:#f0f4f8;">
+                    <th style="padding:10px 6px;">ID</th>
+                    <th style="padding:10px 6px;">Name</th>
+                    <th style="padding:10px 6px;">Comment</th>
+                    <th style="padding:10px 6px;">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while($row = $result->fetch_assoc()): ?>
+                <tr>
+                    <td style="padding:8px 6px; color:#888;"> <?= $row['id'] ?> </td>
+                    <td style="padding:8px 6px; font-weight:500; color:#1a73e8;"> <?= htmlspecialchars($row['user_name']) ?> </td>
+                    <td style="padding:8px 6px; color:#333;"> <?= nl2br(htmlspecialchars($row['comment'])) ?> </td>
+                    <td style="padding:8px 6px; color:#888; font-size:0.97em;"> <?= $row['created_at'] ?> </td>
+                </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+        <?php else: ?>
+            <div style="text-align:center; color:#888; padding:30px 0;">No comments found.</div>
+        <?php endif; ?>
+    </div>
+</div>
+<?php
+if ($result) $result->free();
+
+// Show latest contact messages below comments
+$sql2 = "SELECT id, name, email, subject, message, created_at FROM contact_messages ORDER BY created_at DESC LIMIT 10";
+$result2 = $conn->query($sql2);
+?>
+<div class="container" style="margin-top: 30px;">
+    <div class="card" style="width:100%;max-width:1000px;margin:auto;">
+        <h2 style="margin-bottom:18px;">Latest Contact Messages</h2>
+        <?php if ($result2 && $result2->num_rows > 0): ?>
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="background:#f0f4f8;">
+                    <th style="padding:10px 6px;">ID</th>
+                    <th style="padding:10px 6px;">Name</th>
+                    <th style="padding:10px 6px;">Email</th>
+                    <th style="padding:10px 6px;">Subject</th>
+                    <th style="padding:10px 6px;">Message</th>
+                    <th style="padding:10px 6px;">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while($row = $result2->fetch_assoc()): ?>
+                <tr>
+                    <td style="padding:8px 6px; color:#888;"> <?= $row['id'] ?> </td>
+                    <td style="padding:8px 6px; font-weight:500; color:#1a73e8;"> <?= htmlspecialchars($row['name']) ?> </td>
+                    <td style="padding:8px 6px; color:#388e3c;"> <?= htmlspecialchars($row['email']) ?> </td>
+                    <td style="padding:8px 6px; color:#333; font-style:italic;"> <?= htmlspecialchars($row['subject']) ?> </td>
+                    <td style="padding:8px 6px; color:#333;"> <?= nl2br(htmlspecialchars($row['message'])) ?> </td>
+                    <td style="padding:8px 6px; color:#888; font-size:0.97em;"> <?= $row['created_at'] ?> </td>
+                </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+        <?php else: ?>
+            <div style="text-align:center; color:#888; padding:30px 0;">No contact messages found.</div>
+        <?php endif; ?>
+    </div>
+</div>
+<?php
+if ($result2) $result2->free();
+$conn->close();
+?>
+
+<!-- Main Cards Section (optional, can be removed if redundant) -->
 <div class="container">
-    <div class="card">
-        <h2>Products</h2>
-        <p>Add, Edit, Delete Products</p>
-        <a href="products.php">Manage Products</a>
-    </div>
-    <div class="card">
-        <h2>Orders</h2>
-        <p>View Customer Orders</p>
-        <a href="orders.php">View Orders</a>
-    </div>
-    <div class="card">
-        <h2>Employees</h2>
-        <p>Manage Employee Details</p>
-        <a href="employee.php">Manage Employees</a>
-    </div>
-    <div class="card">
-        <h2>Comments</h2>
-        <p>See Customer Feedback</p>
-        <a href="comments.php">View Comments</a>
-    </div>
+
 </div>
 </body>
 </html>

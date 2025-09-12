@@ -7,52 +7,135 @@ echo "<link rel='stylesheet' href='../global.css'>";
 echo "<link rel='stylesheet' href='style.css'>";
 echo "<link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap' rel='stylesheet'>";
 echo "<style>
-/* ---- ADDITIONAL EMPLOYEE SPECIFIC STYLES ----*/
-/* ---- EMPLOYEE SPECIFIC STYLES ---- */
+body {
+    background: var(--color-bg);
+    font-family: 'Inter', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
 .company-header {
     text-align: center;
-    padding: 15px;
-    background: linear-gradient(135deg, var(--color-medium-green-text) 0%, var(--color-dark-green-text) 100%);
-    color: white;
-    font-size: 28px;
-    font-weight: bold;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    margin-bottom: 10px;
-    border-radius: 8px;
-}
-
-.table-container {
-    background: white;
-    padding: 20px;
+    padding: 22px 10px 18px 10px;
+    background: linear-gradient(90deg, #e8f5e9 0%, var(--color-main-green) 100%);
+    color: var(--color-dark-green-text);
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+    margin-bottom: 18px;
     border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
 }
-
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+.nav-btn, .logout-btn {
+    background: #fff;
+    color: var(--color-dark-green-text);
+    border: 1.5px solid var(--color-main-green);
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    margin-bottom: 6px;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px var(--color-main-green, #A5D6A7);
+}
+.nav-btn:hover, .logout-btn:hover {
+    background: #e8f5e9;
+    color: var(--color-dark-green-text);
+    box-shadow: 0 4px 16px var(--color-main-green, #A5D6A7);
+}
+.logout-btn {
+    background: #ff4444;
+    color: #fff;
+    border: none;
+    margin-left: 18px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px #ff44441a;
+}
+.logout-btn:hover {
+    background: #c62828;
+    color: #fff;
+}
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 16px;
+    margin-top: 18px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px var(--color-main-green, #A5D6A7);
 }
-
 th, td {
     border: 1px solid var(--color-main-green);
-    padding: 12px 8px;
+    padding: 13px 10px;
     text-align: center;
+    font-size: 1rem;
 }
-
 th {
-    background: linear-gradient(135deg, var(--color-medium-green-text) 0%, var(--color-dark-green-text) 100%);
-    color: white;
+    background: var(--color-main-green);
+    color: var(--color-dark-btn);
     font-weight: 600;
+    letter-spacing: 1px;
 }
-
 tr:nth-child(even) {
     background-color: var(--color-bg-light-card);
 }
-
 tr:hover {
-    background-color: var(--color-main-green);
+    background-color: #e8f5e9;
+    color: var(--color-dark-green-text);
+}
+.btn-edit, .btn-delete, .add-btn {
+    display: inline-block;
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 0.98rem;
+    font-weight: 500;
+    text-decoration: none;
+    margin: 0 3px;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-edit {
+    background: var(--color-main-green);
+    color: var(--color-gray-800);
+    border: none;
+}
+.btn-edit:hover {
+    background: var(--color-bg-light-card);
+    color: var(--color-dark-green-text);
+}
+.btn-delete {
+    background: #ff4444;
+    color: #fff;
+    border: none;
+}
+.btn-delete:hover {
+    background: #c62828;
+    color: #fff;
+}
+.add-btn {
+    background: var(--color-main-green);
+    color: var(--color-dark-btn);
+    border: none;
+    margin-top: 10px;
+    font-weight: 600;
+}
+.add-btn:hover {
+    background: #e8f5e9;
+    color: var(--color-dark-green-text);
+}
+.fat-row { background: #fffde7 !important; }
+.ingredients-row { background: #e3f2fd !important; }
+.left-align { text-align: left !important; }
+@media (max-width: 900px) {
+    .company-header { font-size: 1.3rem; }
+    th, td { font-size: 0.95rem; padding: 8px 4px; }
+    .navbar { gap: 8px; }
 }
 </style>";
 

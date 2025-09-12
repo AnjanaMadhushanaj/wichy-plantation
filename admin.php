@@ -252,6 +252,8 @@ $recent_orders = $recent_orders_result->fetch_all(MYSQLI_ASSOC);
                     <a href="admin/orders.php" class="admin-link">📋 View Orders</a>
                     <a href="admin/employee.php" class="admin-link">👥 Manage Employees</a>
                     <a href="public/items.php" class="admin-link">🛍️ View Shop</a>
+                    <a href="admin/comments.php" class="admin-link">💬 View Comments</a>
+                    <a href="admin/contact_messages.php" class="admin-link">✉️ View Contact Messages</a>
                 </div>
             </div>
 
@@ -295,6 +297,8 @@ $recent_orders = $recent_orders_result->fetch_all(MYSQLI_ASSOC);
                     <?php endif; ?>
                 </div>
             </div>
+
+            
         </div>
     </div>
 </body>
