@@ -16,8 +16,19 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['user_id']) {
 	exit;
 }
 
-$res = $conn->query("SELECT * FROM product ORDER BY product_id DESC");
-$products = $res->fetch_all(MYSQLI_ASSOC);
+// Search handling
+$q = trim($_GET['q'] ?? '');
+if ($q !== '') {
+    $like = '%' . $q . '%';
+    $stmt = $conn->prepare("SELECT product_id, product_name, product_price, product_image, description FROM product WHERE product_name LIKE ? OR description LIKE ? ORDER BY product_id DESC");
+    $stmt->bind_param('ss', $like, $like);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $products = $result->fetch_all(MYSQLI_ASSOC);
+} else {
+    $res = $conn->query("SELECT product_id, product_name, product_price, product_image, description FROM product ORDER BY product_id DESC");
+    $products = $res->fetch_all(MYSQLI_ASSOC);
+}
 ?>
 <!doctype html>
 <html>
@@ -475,6 +486,50 @@ main {
     font-style: italic;
     font-weight: 500;
 }
+/* ---- SEARCH BAR ---- */
+.search-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 0 1.75rem 0;
+}
+.search-bar {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    width: 100%;
+    max-width: 820px;
+    background: #fff;
+    border: 2px solid var(--color-main-green);
+    border-radius: 12px;
+    padding: 12px 16px;
+    min-height: 56px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+.search-bar input[type="text"] {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1.05rem;
+    color: var(--color-gray-800);
+}
+.search-bar button {
+    background-color: var(--color-dark-green-text);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1rem;
+}
+.search-meta {
+    color: var(--color-gray-700);
+    font-size: 1rem;
+    text-align: center;
+}
 </style>
 </head>
 <body>
@@ -540,7 +595,24 @@ main {
 
 <main>
     <div class="container">
+        <div class="search-wrap">
+            <form class="search-bar" method="get" action="items.php" role="search">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="color: var(--color-gray-700);">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" name="q" placeholder="Search products..." value="<?= h($q) ?>" aria-label="Search products">
+                <button type="submit">Search</button>
+            </form>
+            <div class="search-meta">
+                <?php if ($q !== ''): ?>
+                    Showing <strong><?= count($products) ?></strong> results for "<?= h($q) ?>"
+                <?php else: ?>
+                    Showing <strong><?= count($products) ?></strong> products
+                <?php endif; ?>
+            </div>
+        </div>
         <div class="grid">
+<?php if (!empty($products)): ?>
 <?php foreach($products as $p): ?>
 <div class="card">
 <img src="<?=h($p['product_image'])?>" alt="">
@@ -552,6 +624,12 @@ main {
 </div>
 </div>
 <?php endforeach; ?>
+<?php else: ?>
+<div style="grid-column: 1 / -1; background:#fff; border:1px solid var(--color-main-green); border-radius:12px; padding:24px; text-align:center;">
+    <h3 style="margin:0 0 8px; color:var(--color-dark-green-text);">No products found</h3>
+    <p style="margin:0; color:var(--color-gray-700);">Try a different keyword or <a href="items.php" style="color:var(--color-medium-green-text); text-decoration:none; font-weight:600;">clear the search</a>.</p>
+</div>
+<?php endif; ?>
         </div>
     </div>
 </main>

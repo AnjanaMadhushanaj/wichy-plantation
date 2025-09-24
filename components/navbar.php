@@ -25,6 +25,7 @@
                 <a href="aboutus.php"<?php if($current=='aboutus.php') echo ' class="active"'; ?>>About us</a>
                 <a href="news.php"<?php if($current=='news.php') echo ' class="active"'; ?>>News</a>
                 <a href="contactus.php"<?php if($current=='contactus.php') echo ' class="active"'; ?>>Help us</a>
+                <a href="image-gallery.php"<?php if($current=='image-gallery.php') echo ' class="active"'; ?>>Gallery</a>
             </nav>
             <div class="header-actions">
                 <a href="login.php" class="btn btn-outline">Sign In</a>

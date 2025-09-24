@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 } else {
-    header('Location: admin.php');
+    // Fallback: render a small back link if accessed directly
+    echo '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Add Comment</title><style>body{font-family:Segoe UI,Arial,sans-serif;background:#f6f8fa;padding:32px;} .card{max-width:520px;margin:40px auto;background:#fff;border:1px solid #e1e4e8;border-radius:10px;box-shadow:0 2px 12px #0001;padding:24px;text-align:center;} .btn{display:inline-block;margin-top:8px;padding:10px 16px;border-radius:8px;background:#2E7D32;color:#fff;text-decoration:none;font-weight:600;} .btn.secondary{background:#f7fafc;color:#2d3a4b;border:1px solid #e0e6ed;} .btn.secondary:hover{background:#eef4fb;} </style></head><body><div class="card"><h2>Admin Add Comment</h2><p>This endpoint expects a POST submission from the dashboard form.</p><a href="admin.php" class="btn">Go to Dashboard</a><br><a href="#" class="btn secondary" onclick="if(history.length>1){history.back();}else{location.href=\'admin.php\';}return false;">Go Back</a></div></body></html>';
     exit;
 }

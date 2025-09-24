@@ -5,6 +5,56 @@ $errors = [];
 $success = '';
 $username = $email = '';
 
+// Strong password validation
+function password_strength_errors(string $password, string $username = '', string $email = ''): array {
+    $errs = [];
+    $minLen = 6; // per requirement: allow 6+ characters
+    if ($password === '') {
+        $errs[] = 'Password is required.';
+        return $errs;
+    }
+    if (strlen($password) < $minLen) {
+        $errs[] = "Password must be at least {$minLen} characters.";
+    }
+    if (preg_match('/\s/', $password)) {
+        $errs[] = 'Password must not contain spaces.';
+    }
+    if (!preg_match('/[a-z]/', $password)) {
+        $errs[] = 'Include at least one lowercase letter.';
+    }
+    if (!preg_match('/[A-Z]/', $password)) {
+        $errs[] = 'Include at least one uppercase letter.';
+    }
+    if (!preg_match('/\d/', $password)) {
+        $errs[] = 'Include at least one number.';
+    }
+    if (!preg_match('/[^A-Za-z0-9]/', $password)) {
+        $errs[] = 'Include at least one special symbol (e.g. !@#$%).';
+    }
+    if (preg_match('/^[0-9]+$/', $password)) {
+        $errs[] = 'Password cannot be only numbers.';
+    }
+    $uname = trim($username);
+    if ($uname !== '' && strlen($uname) >= 3 && stripos($password, $uname) !== false) {
+        $errs[] = 'Password must not contain your username.';
+    }
+    $emailLocal = '';
+    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $emailLocal = strstr($email, '@', true) ?: '';
+    }
+    if ($emailLocal !== '' && strlen($emailLocal) >= 3 && stripos($password, $emailLocal) !== false) {
+        $errs[] = 'Password must not contain your email name.';
+    }
+    $common = [
+        'password','123456','123456789','qwerty','12345678','111111','123123','abc123','password1','iloveyou',
+        '000000','12345','1234567','qwerty123','1q2w3e4r','admin','welcome','monkey','dragon','letmein','football'
+    ];
+    if (in_array(strtolower($password), $common, true)) {
+        $errs[] = 'Please choose a less common password.';
+    }
+    return $errs;
+}
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
@@ -28,10 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['email'] = 'Please enter a valid email address.';
     }
     
-    if (empty($password)) {
-        $errors['password'] = 'Password is required.';
-    } elseif (strlen($password) < 6) {
-        $errors['password'] = 'Password must be at least 6 characters.';
+    // Strong password validation
+    $pwErrs = password_strength_errors($password, $username, $email);
+    if (!empty($pwErrs)) {
+        $errors['password'] = implode(' ', $pwErrs);
     }
     
     if ($password !== $confirm_password) {
@@ -293,7 +343,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="input" required>
+                <input type="password" id="password" name="password" class="input" required minlength="6" autocomplete="new-password" spellcheck="false" aria-describedby="passwordHelp">
+                <small id="passwordHelp" style="display:block;color:#555;margin-top:6px;">Use at least 6 characters with a mix of uppercase, lowercase, numbers, and symbols. Avoid spaces and personal info.</small>
                 <?php if (!empty($errors['password'])): ?>
                     <div class="error"><?= htmlspecialchars($errors['password']) ?></div>
                 <?php endif; ?>
@@ -301,7 +352,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <div class="form-group">
                 <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" class="input" required>
+                <input type="password" id="confirm_password" name="confirm_password" class="input" required autocomplete="new-password">
                 <?php if (!empty($errors['confirm_password'])): ?>
                     <div class="error"><?= htmlspecialchars($errors['confirm_password']) ?></div>
                 <?php endif; ?>
@@ -337,10 +388,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.getElementById('file-name').textContent = fileName ? 'Selected: ' + fileName : '';
         });
         
-        // Form validation
+        // Form validation (client-side assist; server-side is authoritative)
         document.querySelector('form').addEventListener('submit', function(e) {
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm_password').value;
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
             
             if (password !== confirmPassword) {
                 e.preventDefault();
@@ -348,9 +401,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 return false;
             }
             
-            if (password.length < 6) {
+            // Quick strength checks
+            const minLen = 6;
+            const localPart = (email.includes('@') ? email.split('@')[0] : '');
+            const hasLower = /[a-z]/.test(password);
+            const hasUpper = /[A-Z]/.test(password);
+            const hasDigit = /\d/.test(password);
+            const hasSymbol = /[^A-Za-z0-9]/.test(password);
+            if (password.length < minLen) {
                 e.preventDefault();
-                alert('Password must be at least 6 characters long!');
+                alert('Password must be at least ' + minLen + ' characters long.');
+                return false;
+            }
+            if (/\s/.test(password) || !hasLower || !hasUpper || !hasDigit || !hasSymbol ||
+                (username && password.toLowerCase().includes(username.toLowerCase())) ||
+                (localPart && password.toLowerCase().includes(localPart.toLowerCase()))) {
+                e.preventDefault();
+                alert('Use a stronger password: mix upper/lowercase, numbers, symbols; no spaces; avoid personal info.');
                 return false;
             }
         });

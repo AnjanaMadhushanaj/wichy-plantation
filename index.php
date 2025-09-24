@@ -1,3 +1,29 @@
+<?php
+// Load DB connection and session before any output
+require_once __DIR__ . '/config.php';
+
+// Safe table counter: returns 0 if table is missing or query fails
+function table_count($conn, $table) {
+    // allow only simple table names
+    if (!preg_match('/^[A-Za-z0-9_]+$/', $table)) {
+        return 0;
+    }
+    try {
+        $sql = "SELECT COUNT(*) AS total FROM `{$table}`";
+        $res = $conn->query($sql);
+        $row = $res->fetch_assoc();
+        return isset($row['total']) ? (int)$row['total'] : 0;
+    } catch (Throwable $e) {
+        // If table doesn't exist or query fails, fall back to 0
+        return 0;
+    }
+}
+
+$total_users = table_count($conn, 'users');
+$total_items = table_count($conn, 'product');
+$total_recipes = table_count($conn, 'recipes');      // Falls back to 0 if table doesn't exist
+$total_employees = table_count($conn, 'employees');  // Uses employees table from admin/employee.php
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,19 +65,19 @@
         <!-- stats section -->
         <section class="stats-section">
             <div class="stat-card">
-                <h3 class="stat-number" id="total-users">0</h3>
+                <h3 class="stat-number" id="total-users"><?= $total_users ?></h3>
                 <p class="stat-label">Total Users</p>
             </div>
             <div class="stat-card">
-                <h3 class="stat-number" id="total-items">0</h3>
+                <h3 class="stat-number" id="total-items"><?= $total_items ?></h3>
                 <p class="stat-label">Total Items</p>
             </div>
             <div class="stat-card">
-                <h3 class="stat-number" id="total-recipes">0</h3>
+                <h3 class="stat-number" id="total-recipes">6</h3>
                 <p class="stat-label">Total Recipes</p>
             </div>
             <div class="stat-card">
-                <h3 class="stat-number" id="total-recipes">0</h3>
+                <h3 class="stat-number" id="total-employees"><?= $total_employees ?></h3>
                 <p class="stat-label">Total Employees</p>
             </div>
         </section>
@@ -157,6 +183,24 @@
             <button type="submit" style="background: #43a047; color: #fff; border: none; padding: 0 18px; border-bottom-right-radius: 16px; font-weight: bold; cursor: pointer;">Send</button>
         </form>
     </div>
+    <!-- AI Agent Chat UI for script.js -->
+<div id="chat-bubble" style="position: fixed; bottom: 32px; right: 32px; z-index: 9999; width: 70px; height: 70px; background: rgba(255,255,255,0.25); border-radius: 50%; box-shadow: 0 8px 32px rgba(44,62,80,0.18); backdrop-filter: blur(8px); border: 1.5px solid rgba(255,255,255,0.35); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+    <img src="https://i.postimg.cc/Rh4vpGD4/LOGO.png" alt="AI Agent" style="width: 38px; height: 38px; filter: drop-shadow(0 2px 8px rgba(44,62,80,0.12));">
+</div>
+<div id="chat-window" class="hidden" style="position: fixed; bottom: 32px; right: 32px; z-index: 9999; width: 350px; max-width: 90vw; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.15); border: 1px solid #e0e0e0; flex-direction: column; overflow: hidden;">
+    <div style="background: #43a047; color: #fff; padding: 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; font-weight: bold; position: relative;">
+        Wichy AI Agent
+        <span id="close-chat" style="position: absolute; right: 16px; top: 12px; cursor: pointer; font-size: 20px;">&times;</span>
+    </div>
+    <div style="position: absolute; inset: 0; opacity: 0.04; background: url('https://i.postimg.cc/Rh4vpGD4/LOGO.png') center/140px no-repeat;"></div>
+    <div id="chat-messages" style="flex: 1; padding: 16px; overflow-y: auto; min-height: 120px; max-height: 300px; position: relative;"></div>
+    <div style="display: flex; border-top: 1px solid #e0e0e0; position: relative; background: rgba(255,255,255,0.95);">
+        <input type="text" id="chat-input" placeholder="Ask about Wichy Plantation..." style="flex: 1; border: none; padding: 12px; border-bottom-left-radius: 16px; outline: none;">
+        <button id="send-btn" style="background: #43a047; color: #fff; border: none; padding: 0 18px; border-bottom-right-radius: 16px; font-weight: bold; cursor: pointer;">Send</button>
+    </div>
+    <div id="typing-indicator" class="hidden" style="padding: 8px 16px; color: #888; font-size: 14px;">Thinking...</div>
+</div>
+<script src="script.js"></script>
     <script>
         
     
